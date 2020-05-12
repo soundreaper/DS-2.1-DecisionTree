@@ -66,7 +66,7 @@ class DecisionTree(object):
         queue.append(start_node)
         while queue != []:
             node = queue.pop(0)
-            visit([node.name, [pointer[0] for pointer in node.pointers]])
+            visit([node, [pointer for pointer in node.pointers]])
 
             for pointer in node.pointers:
                 queue.append(pointer[1])
@@ -74,11 +74,28 @@ class DecisionTree(object):
     def fit(self, df, target):
         """Function stub, Calculate entropy of each column and add nodes to the
         tree."""
-        self.root = DecisionTreeNode()
-        queue = [self.root]
+        self.root = DecisionTreeNode(self.max_info_gain(df, target)[1])
+        self.size += 1
+        self._recursive_fit(df, target, self.root)
 
-        while queue != []:
-            pass
+
+
+    def _recursive_fit(self, df, target, parent_node):
+        s = df[parent_node.name].unique()
+        for i in s:
+            new_df = df[df[parent_node.name] == i].drop(columns=parent_node.name)
+            gain_name = self.max_info_gain(new_df, target)
+            if gain_name[0] == 0:
+                final = self.conditional_prob(df, parent_node.name, target, i)
+                new_node = DecisionTreeNode(list(final.keys())[0])
+                self.size += 1
+                parent_node.pointers.append((i, new_node))
+            else:
+                new_node = DecisionTreeNode(gain_name[1])
+                parent_node.pointers.append((i, new_node))
+                self.size += 1
+                self._recursive_fit(new_df, target, new_node)
+
 
     def _entropy(self, p):
         """Func stub, clac entropy helper function."""
@@ -101,7 +118,7 @@ class DecisionTree(object):
             pr[i] = len(df[df[col] == i]) / len(df[col])
         return pr
 
-    def info_gain(self, df, feature, target, givens):
+    def info_gain(self, df, feature, target):
         # obtain the entropy of the decision
         dict_decision = dict(df[target].value_counts())
         prob_decision = [q for (p,q) in dict_decision.items()]/sum(dict_decision.values())
@@ -140,13 +157,14 @@ class DecisionTree(object):
         if givens is not None:
             for col, value in givens:
                 df = df[df[col] == value]
-        info_gains = [(self.info_gain(df, column, target, givens), column) for column in df.columns[0:-1]]
+                df = df.drop(columns=[col])
+        info_gains = [(self.info_gain(df, column, target), column) for column in df.columns[0:-1]]
         highest = info_gains[0]
-        print(info_gains)
+        # print(info_gains)
         for this_info_gain in info_gains:
             if this_info_gain[0] > highest[0]:
                 highest = this_info_gain
-        return highest[1]
+        return highest
 
     def predict(self, df):
         """Given a df, predict each row's label"""
