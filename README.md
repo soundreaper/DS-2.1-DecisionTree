@@ -12,4 +12,4 @@ Use the app [here](INSERT LINK TO WEBAPP HERE).
 ## Authors
 
 * **Subal Pant** - [soundreaper](https://github.com/soundreaper)
-* **John Miner** - [shaannessy25](https://github.com/JohnminerIv)
+* **John Miner** - [JohnminerIv](https://github.com/JohnminerIv)
