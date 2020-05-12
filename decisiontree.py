@@ -64,7 +64,7 @@ class DecisionTree(object):
         """iterative level-order traversal"""
         queue = []
         queue.append(start_node)
-        while queue is not []:
+        while queue != []:
             node = queue.pop(0)
             visit([node.name, [pointer[0] for pointer in node.pointers]])
 
@@ -74,11 +74,79 @@ class DecisionTree(object):
     def fit(self, df, target):
         """Function stub, Calculate entropy of each column and add nodes to the
         tree."""
-        pass
+        self.root = DecisionTreeNode()
+        queue = [self.root]
 
-    def entropy(self, column, target, given=None):
+        while queue != []:
+            pass
+
+    def _entropy(self, p):
         """Func stub, clac entropy helper function."""
-        pass
+        H = np.array([-i*np.log2(i) for i in p]).sum()
+        return H
+
+    def conditional_prob(self, df, c1, c2, condition):
+        df_new = df[df[c1] == condition][c2]
+        s = df_new.unique()
+        population_size = len(df_new)
+        pr = {}
+        for i in s:
+            pr[i] = len(df[(df[c1] == condition) & (df[c2]== i)]) / population_size
+        return pr
+
+    def probability(self, df, col):
+        s = df[col].unique()
+        pr = {}
+        for i in s:
+            pr[i] = len(df[df[col] == i]) / len(df[col])
+        return pr
+
+    def info_gain(self, df, feature, target, givens):
+        # obtain the entropy of the decision
+        dict_decision = dict(df[target].value_counts())
+        prob_decision = [q for (p,q) in dict_decision.items()]/sum(dict_decision.values())
+        entropy_decision = self._entropy(prob_decision)
+    #     print(entropy_decision)
+
+        # obtain the probabilities of the feature
+        # example: for Wind, obtain the probabilities of Strong and Weak
+        dict_feature = dict(df[feature].value_counts())
+        dict_prob_feature = {}
+        for (p,q) in dict_feature.items():
+            dict_prob_feature[p] = q/sum(dict_feature.values())
+    #     print(dict_prob_feature)
+
+        # obtain the probability of the decision,
+        # for all possible values of the feature (conditions)
+        conditions = df[feature].unique()
+        dict_ = {}
+        for condition in conditions:
+            dict_[condition] = self.conditional_prob(df, feature, target, condition)
+    #     print(dict_)
+
+        # Given the above metrics, calculate the information gain
+        # between the feature and the decision using the formula we learned
+        S = 0
+        for (i,j) in dict_.items():
+    #         print(i,j)
+            prob_condition = list(dict_[i].values())
+    #         print(entropy_condition)
+            S = S + dict_prob_feature[i]*self._entropy(prob_condition)
+    #         print(dict_prob_feature[i]*entropy(entropy_condition))
+        return entropy_decision - S
+
+
+    def max_info_gain(self, df, target, givens=None):
+        if givens is not None:
+            for col, value in givens:
+                df = df[df[col] == value]
+        info_gains = [(self.info_gain(df, column, target, givens), column) for column in df.columns[0:-1]]
+        highest = info_gains[0]
+        print(info_gains)
+        for this_info_gain in info_gains:
+            if this_info_gain[0] > highest[0]:
+                highest = this_info_gain
+        return highest[1]
 
     def predict(self, df):
         """Given a df, predict each row's label"""
