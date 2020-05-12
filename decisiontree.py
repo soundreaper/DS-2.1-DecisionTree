@@ -34,7 +34,7 @@ class DecisionTreeNode(object):
 
 class DecisionTree(object):
 
-    def __init__(self):
+    def __init__(self, max_depth):
         """Initialize this tree"""
         self.root = None
         self.size = 0
