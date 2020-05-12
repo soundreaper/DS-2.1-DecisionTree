@@ -34,7 +34,7 @@ class DecisionTreeNode(object):
 
 class DecisionTree(object):
 
-    def __init__(self, max_depth):
+    def __init__(self):
         """Initialize this tree"""
         self.root = None
         self.size = 0
@@ -72,7 +72,7 @@ class DecisionTree(object):
                 queue.append(pointer[1])
 
     def fit(self, df, target):
-        """Function stub, Calculate info_gain of each column and add nodes to the
+        """Function stub, Calculate entropy of each column and add nodes to the
         tree."""
         self.root = DecisionTreeNode(self.max_info_gain(df, target)[1])
         self.size += 1
@@ -81,15 +81,13 @@ class DecisionTree(object):
 
 
     def _recursive_fit(self, df, target, parent_node):
-        """Call from fit using a head node in order to keep adding more nodes to
-        the tree."""
         s = df[parent_node.name].unique()
         for i in s:
             new_df = df[df[parent_node.name] == i].drop(columns=parent_node.name)
             gain_name = self.max_info_gain(new_df, target)
             if gain_name[0] == 0:
                 final = self.conditional_prob(df, parent_node.name, target, i)
-                new_node = DecisionTreeNode(list(final.keys())[0])
+                new_node = DecisionTreeNode(final)
                 self.size += 1
                 parent_node.pointers.append((i, new_node))
             else:
@@ -105,7 +103,6 @@ class DecisionTree(object):
         return H
 
     def conditional_prob(self, df, c1, c2, condition):
-        """Calculate the probability of one thing given another."""
         df_new = df[df[c1] == condition][c2]
         s = df_new.unique()
         population_size = len(df_new)
@@ -115,7 +112,6 @@ class DecisionTree(object):
         return pr
 
     def probability(self, df, col):
-        """calculate the probability"""
         s = df[col].unique()
         pr = {}
         for i in s:
@@ -123,17 +119,19 @@ class DecisionTree(object):
         return pr
 
     def info_gain(self, df, feature, target):
-        """Find the info gained from on colum to another"""
         # obtain the entropy of the decision
         dict_decision = dict(df[target].value_counts())
         prob_decision = [q for (p,q) in dict_decision.items()]/sum(dict_decision.values())
         entropy_decision = self._entropy(prob_decision)
+    #     print(entropy_decision)
 
         # obtain the probabilities of the feature
+        # example: for Wind, obtain the probabilities of Strong and Weak
         dict_feature = dict(df[feature].value_counts())
         dict_prob_feature = {}
         for (p,q) in dict_feature.items():
             dict_prob_feature[p] = q/sum(dict_feature.values())
+    #     print(dict_prob_feature)
 
         # obtain the probability of the decision,
         # for all possible values of the feature (conditions)
@@ -141,24 +139,30 @@ class DecisionTree(object):
         dict_ = {}
         for condition in conditions:
             dict_[condition] = self.conditional_prob(df, feature, target, condition)
+    #     print(dict_)
 
         # Given the above metrics, calculate the information gain
         # between the feature and the decision using the formula we learned
         S = 0
         for (i,j) in dict_.items():
+    #         print(i,j)
             prob_condition = list(dict_[i].values())
+    #         print(entropy_condition)
             S = S + dict_prob_feature[i]*self._entropy(prob_condition)
+    #         print(dict_prob_feature[i]*entropy(entropy_condition))
         return entropy_decision - S
 
 
     def max_info_gain(self, df, target, givens=None):
-        """find the most info gained from a list of cols"""
         if givens is not None:
             for col, value in givens:
                 df = df[df[col] == value]
                 df = df.drop(columns=[col])
         info_gains = [(self.info_gain(df, column, target), column) for column in df.columns[0:-1]]
+        if len(info_gains) == 0:
+            return (0, 'None')
         highest = info_gains[0]
+        # print(info_gains)
         for this_info_gain in info_gains:
             if this_info_gain[0] > highest[0]:
                 highest = this_info_gain
