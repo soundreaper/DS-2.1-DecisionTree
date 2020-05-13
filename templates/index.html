@@ -11,7 +11,7 @@
           <h2>Tennis Dataset</h2>
           <div style="padding-left: 90px; padding-right: 90px;">
               {% if image != '' %}
-              <p class="card-text"><img src="{{url_for('static', filename=image)}}" alt="..." height="400" width="400"></p>
+              <p class="card-text"><img src="{{url_for('static', filename=image)}}" alt="..."></p>
               {% else %}
             <p class="card-text"><img src="{{url_for('static', filename='img/tree.png')}}" align="middle" /></p>
               {% endif %}
