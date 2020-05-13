@@ -1,0 +1,25 @@
+age,prescription,astigmatic,tear production rate,target
+young,myope,no,reduced,no lenses
+young,myope,no,normal,soft lenses
+young,myope,yes,reduced,no lenses
+young,myope,yes,normal,hard lenses
+young,hypermetrope,no,reduced,no lenses
+young,hypermetrope,no,normal,soft lenses
+young,hypermetrope,yes,reduced,no lenses
+young,hypermetrope,yes,normal,hard lenses
+pre-presbyopic,myope,no,reduced,no lenses
+pre-presbyopic,myope,no,normal,soft lenses
+pre-presbyopic,myope,yes,reduced,no lenses
+pre-presbyopic,myope,yes,normal,hard lenses
+pre-presbyopic,hypermetrope,no,reduced,no lenses
+pre-presbyopic,hypermetrope,no,normal,soft lenses
+pre-presbyopic,hypermetrope,yes,reduced,no lenses
+pre-presbyopic,hypermetrope,yes,normal,no lenses
+presbyopic,myope,no,reduced,no lenses
+presbyopic,myope,no,normal,no lenses
+presbyopic,myope,yes,reduced,no lenses
+presbyopic,myope,yes,normal,hard lenses
+presbyopic,hypermetrope,no,reduced,no lenses
+presbyopic,hypermetrope,no,normal,soft lenses
+presbyopic,hypermetrope,yes,reduced,no lenses
+presbyopic,hypermetrope,yes,normal,no lenses
