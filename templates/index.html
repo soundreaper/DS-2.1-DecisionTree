@@ -8,6 +8,11 @@
         <div class="card-body">
           <h1 style="font-size: 72px">Decision Trees</h1>
           <hr class="my-4">
+          {% if image != '' %}
+          <h2>{{image}}</h2>
+          {% else %}
+          <h2>Tennis Dataset</h2>
+          {% endif %}
           <h2>Tennis Dataset</h2>
           <div style="padding-left: 90px; padding-right: 90px;">
               {% if image != '' %}
