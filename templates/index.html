@@ -10,12 +10,21 @@
           <hr class="my-4">
           <h2>Tennis Dataset</h2>
           <div style="padding-left: 90px; padding-right: 90px;">
+              {% if image != '' %}
+              <p class="card-text"><img src="{{url_for('static', filename=image)}}" alt="..." height="400" width="400"></p>
+              {% else %}
             <p class="card-text"><img src="{{url_for('static', filename='img/tree.png')}}" align="middle" /></p>
+              {% endif %}
           </div>
           <hr class="my-4">
           <h2>Purpose of this WebApp?</h2>
           <div style="padding-left: 90px; padding-right: 90px;">
-            <p class="card-text">Visualize a decision tree dataset.</p>
+            <p class="card-text">Visualize a decision tree dataset using csv. Please have the target as the last column.</p>
+            <form action="/build" method="post" enctype="multipart/form-data">
+                Select image to upload:
+                <input type="file" name="fileToUpload" id="fileToUpload">
+                <input type="submit" value="Upload Image" name="submit">
+            </form></div>
           <a href="https://github.com/soundreaper/DS-2.1-DecisionTree" target="_blank" style="font-size: 24px">View Code on GitHub</a>
         </div>
       </div>

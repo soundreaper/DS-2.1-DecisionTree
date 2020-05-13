@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import pydotplus
 
 
 class DecisionTreeNode(object):
@@ -11,7 +12,7 @@ class DecisionTreeNode(object):
             self.pointers = list()
 
     def __repr__(self):
-        return f'Node({self.name})'
+        return f'{self.name}'
 
     def is_leaf(self):
         """Return True if this node is a leaf (has no children)."""
@@ -73,9 +74,65 @@ class DecisionTree(object):
         for row in rows:
             nodes = [i[0] for i in row]
             new_rows.append(nodes)
-            pointers = [i[1] for i in row]
+            pointers = [i[1] for i in row if i[1] != []]
             new_rows.append(pointers)
         return new_rows[0:-1]
+
+    def re_order_show_index_for_dot(self, rows):
+        dot_info = []
+        nodes = 0
+        for i in range(len(rows)):
+            if i % 2 == 0:
+                for j in range(len(rows[i])):
+                    dot_info.append(['N', nodes, rows[i][j]])
+                    nodes += 1
+            else:
+                seen = 0
+                for j in range(len(rows[i])):
+                    for p in range(len(rows[i][j])):
+                        for node_line in dot_info:
+                            if node_line[0] == 'N':
+                                if str(node_line[2]) == str(rows[i][j][p][2]):
+                                    connection = node_line[1]
+                        dot_info.append(['L', connection, nodes+seen, rows[i][j][p][0]])
+                        seen += 1
+        dot_info_sorted = self.reorder_dot_info(dot_info)
+        return dot_info_sorted
+
+
+    def reorder_dot_info(self, dot_info):
+        nodes = [i for i in dot_info if i[0] == 'N']
+        lines = [i for i in dot_info if i[0] == 'L']
+        for i in lines:
+            for j in range(len(nodes)):
+                if i[2] == nodes[j][1]:
+                    nodes.insert(j+1, i)
+        return nodes
+
+    def create_dot_png(self, file_name):
+        self.create_dot_file(file_name)
+        graph = pydotplus.graph_from_dot_file(f'{file_name}.dot')
+        graph.write_png(f'{file_name}.png')
+
+    def create_dot_file(self, file_name):
+        full_string = """digraph Tree {
+node [shape=box] ;"""
+        ending = """
+}"""
+        node_string = """
+{node_number} [label="{node_label}"] ;"""
+        connection_lines = """
+{parent_node} -> {child_node} [headlabel="{label}"] ;"""
+        dot_info = self.re_order_show_index_for_dot(self.show_tree())
+        f = open(f"{file_name}.dot", "a")
+        f.write(full_string)
+        for line in dot_info:
+            if line[0] == 'N':
+                f.write(node_string.format(node_number=line[1], node_label=line[2]))
+            else:
+                f.write(connection_lines.format(parent_node=line[1], child_node=line[2], label=line[3]))
+        f.write(ending)
+        f.close()
 
     def items_level_order(self):
         """Return a level-order list of all items in this tree."""
@@ -113,10 +170,10 @@ class DecisionTree(object):
                 final = self.conditional_prob(df, parent_node.name, target, i)
                 new_node = DecisionTreeNode(final)
                 self.size += 1
-                parent_node.pointers.append((i, new_node))
+                parent_node.pointers.append((i, new_node, parent_node.name))
             else:
                 new_node = DecisionTreeNode(gain_name[1])
-                parent_node.pointers.append((i, new_node))
+                parent_node.pointers.append((i, new_node, parent_node.name))
                 self.size += 1
                 self._recursive_fit(new_df, target, new_node)
 
