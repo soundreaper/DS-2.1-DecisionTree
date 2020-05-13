@@ -1,79 +1,29 @@
 {% extends 'base.html' %} {% block content %}
 
-<!-- Sidebar -->
-<nav id="sidebar">
-    <div class="sidebar-header text-center">
-        <a class="text-danger nav-link font-weight-bold" href="#" data-target="#carouselExampleControls" data-slide-to="0" style="font-size: 24px">App Selection</a>
-    </div>
-    <ul class="list-unstyled components text-center text-danger">
-        <li>
-            <a class="text-danger nav-link" href="#" data-target="#carouselExampleControls" data-slide-to="1">Gmail</a>
-        </li>
-        <li>
-            <a class="text-danger nav-link" href="#" data-target="#carouselExampleControls" data-slide-to="2">Spotify</a>
-        </li>
-        <li>
-            <a class="text-danger nav-link" href="#" data-target="#carouselExampleControls" data-slide-to="3">Weather</a>
-        </li>
-    </ul>
-</nav>
-
-<!-- Google Search -->
 <div id="content">
-  <div style="padding: 20px" class="row">
-    <div class="col-sm-3"></div>
-    <div class="col-sm-6">
-        <script async src="https://cse.google.com/cse.js?cx=000988731041558718465:h0wx8zukomc"></script>
-        <div class="gcse-search"></div>
-    </div>
-  </div>
-
-<div id="carouselExampleControls" class="carousel slide" style="padding-top: 40px">
+<div id="carouselExampleControls" class="carousel slide">
   <div class="carousel-inner">
     <div class="carousel-item active text-center">
       <div class="card text-center container">
         <div class="card-body">
-          <h1 style="font-size: 72px">Welcome, User!</h1>
+          <h1 style="font-size: 72px">Decision Trees</h1>
           <hr class="my-4">
-          <p class="card-text">Use the sidebar on the left to access different sections!</p>
-        </div>
-      </div>
-    </div>
-    <div class="carousel-item">
-      <div class="container modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalCenteredLabel">New Message</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="form-group">
-              <label for="formGroupExampleInput">To</label>
-              <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter Recipients">
-            </div>
-            <div class="form-group">
-              <label for="formGroupExampleInput2">Subject</label>
-              <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter Subject">
-            </div>
-            <input class="form-control" type="text" placeholder="Type Message">
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-danger">Send</button>
+          <h2>Tennis Dataset</h2>
+          <div style="padding-left: 90px; padding-right: 90px;">
+            <p class="card-text"><img src="{{url_for('static', filename='img/tree.png')}}" align="middle" /></p>
+          </div>
+          <hr class="my-4">
+          <h2>Purpose of this WebApp?</h2>
+          <div style="padding-left: 90px; padding-right: 90px;">
+            <p class="card-text">Visualize a decision tree dataset.</p>
+          <a href="https://github.com/soundreaper/DS-2.1-DecisionTree" target="_blank" style="font-size: 24px">View Code on GitHub</a>
         </div>
       </div>
     </div>
     <div class="carousel-item text-center">
-      <iframe src="https://open.spotify.com/embed/album/1DFixLWuPkv3KT3TnV35m3" width="500" height="700" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
     </div>
-    <div class="carousel-item">
-      <a class="weatherwidget-io" href="https://forecast7.com/en/37d77n122d42/san-francisco/?unit=us" data-label_1="SAN FRANCISCO" data-label_2="WEATHER" data-font="Jura" data-icons="Climacons Animated" data-theme="dark" >SAN FRANCISCO WEATHER</a>
-      <script>
-      !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
-      </script>
+    <div class="carousel-item text-center">
+    </div>
   </div>
 </div>
 {% endblock content %}
