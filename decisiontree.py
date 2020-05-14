@@ -161,7 +161,7 @@ node [shape=box] ;"""
 
     def _recursive_fit(self, df, target, parent_node):
         """Call from fit using a head node in order to keep adding more nodes to
-        the tree."""
+        the tree"""
         s = df[parent_node.name].unique()
         for i in s:
             new_df = df[df[parent_node.name] == i].drop(columns=parent_node.name)
