@@ -124,7 +124,7 @@ node [shape=box] ;"""
         connection_lines = """
 {parent_node} -> {child_node} [headlabel="{label}"] ;"""
         dot_info = self.re_order_show_index_for_dot(self.show_tree())
-        f = open(f"{file_name}.dot", "a")
+        f = open(f"{file_name}.dot", "w")
         f.write(full_string)
         for line in dot_info:
             if line[0] == 'N':
