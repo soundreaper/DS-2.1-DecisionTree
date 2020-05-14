@@ -1,7 +1,7 @@
 # Decision Tree
 
 Simple webapp to show the visualization of a decision tree after processing the dataset.<br>
-Use the app [here](https://decisiontree-ds.herokuapp.com/).
+Use the app [here](http://john-subal-decision-tree.herokuapp.com/).
 
 ## Built With
 
