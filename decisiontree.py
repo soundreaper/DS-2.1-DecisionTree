@@ -245,4 +245,16 @@ node [shape=box] ;"""
 
     def predict(self, df):
         """Given a df, predict each row's label"""
-        pass
+        y_pred = []
+        for index, row in df.iterrows():
+            y_pred.append(self.recursive_predict(row, self.root))
+        return y_pred
+
+    def recursive_predict(self, row, node):
+        if node.name in list(row.keys()):
+            point = row[node.name]
+            for pointer in node.pointers:
+                if pointer[0] == point:
+                    return self.recursive_predict(row, pointer[1])
+        vals = list(node.name.values())
+        return list(node.name.keys())[vals.index(max(vals))]
