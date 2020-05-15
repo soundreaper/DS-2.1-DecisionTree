@@ -3,6 +3,7 @@ from flask import Flask, render_template, url_for, send_from_directory, send_fil
 from decisiontree import *
 from werkzeug.utils import secure_filename
 import pandas as pd
+import json
 
 UPLOAD_FOLDER = 'static'
 ALLOWED_EXTENSIONS = {'csv'}
@@ -27,8 +28,8 @@ def index():
     return render_template('index.html', image='')
 
 
-@app.route('/build', methods=['GET', 'POST'])
-def check():
+@app.route('/interactive', methods=['GET', 'POST'])
+def return_interactive():
     if request.method == 'POST':
         file = request.files['fileToUpload']
         if file and allowed_file(file.filename):
@@ -40,10 +41,31 @@ def check():
             df = pd.read_csv(f'static/{filename}')
             target = list(df.columns)[-1]
             dt.fit(df, target)
+            with open(f'static/json/{filename[0:-4]}.json', 'w') as fp:
+                json.dump(dt.generate_json_like_structure(), fp)
+            return render_template("interactive.html", json_name=f'json/{filename[0:-4]}.json')
+    else:
+        return render_template("index.html", info="No file uploaded", image='')
+
+
+@app.route('/build', methods=['GET', 'POST'])
+def check():
+    if request.method == 'POST':
+        file = request.files['fileToUpload']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            MYDIR = os.path.dirname(__file__)
+            file.save(os.path.join(MYDIR + "/" + app.config['UPLOAD_FOLDER'], filename))
+
+            dt = DecisionTree(max_depth=3)
+            df = pd.read_csv(f'static/{filename}')
+            target = list(df.columns)[-1]
+            dt.fit(df, target)
             dt.create_dot_png(f'static/img/{filename[0:-4]}')
             return render_template("index.html", image=f'img/{filename[0:-4]}.png')
     else:
         return render_template("index.html", info="No file uploaded", image='')
+
 
 @app.route('/login')
 def login():

@@ -152,6 +152,15 @@ node [shape=box] ;"""
             for pointer in node.pointers:
                 queue.append(pointer[1])
 
+    def generate_json_like_structure(self, node=None):
+        if node is None:
+            node = self.root
+        if node.pointers != []:
+            children = [self.generate_json_like_structure(node=i[1]) for i in node.pointers]
+            return {"name": str(node.name), "children": children}
+        else:
+            return {"name": str(node.name)}
+
     def fit(self, df, target):
         """Function stub, Calculate info_gain of each column and add nodes to the
         tree."""
