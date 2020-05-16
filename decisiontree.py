@@ -161,6 +161,18 @@ node [shape=box] ;"""
         else:
             return {"name": str(node.name)}
 
+    def generate_json_like_structure_label(self, link=None, node=None):
+        if node is None:
+            node = self.root
+        if node.pointers != []:
+            if link is not None:
+                child = [self.generate_json_like_structure_label(node=link[1])]
+                return {"name": str(link[0]), "children": child}
+            children = [self.generate_json_like_structure_label(link=i) for i in node.pointers]
+            return {"name": str(node.name), "children": children}
+        else:
+            return {"name": str(node.name)}
+
     def fit(self, df, target):
         """Function stub, Calculate info_gain of each column and add nodes to the
         tree."""

@@ -42,7 +42,7 @@ def return_interactive():
             target = list(df.columns)[-1]
             dt.fit(df, target)
             with open(f'static/json/{filename[0:-4]}.json', 'w') as fp:
-                json.dump(dt.generate_json_like_structure(), fp)
+                json.dump(dt.generate_json_like_structure_label(), fp)
             return render_template("interactive.html", json_name=f'json/{filename[0:-4]}.json')
     else:
         return render_template("index.html", info="No file uploaded", image='')
