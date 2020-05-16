@@ -61,11 +61,11 @@ d3.json("{{url_for('static', filename=json_name)}}", function(error, flare) {
   root.y0 = 0;
 
   function collapse(d) {
-    if (d.children) {
-      d._children = d.children;
-      d._children.forEach(collapse);
-      d.children = null;
-    }
+//    if (d.children) {
+//      d._children = d.children;
+//      d._children.forEach(collapse);
+//      d.children = null;
+//    }
   }
 
   root.children.forEach(collapse);

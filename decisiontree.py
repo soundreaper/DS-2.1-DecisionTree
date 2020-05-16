@@ -152,11 +152,13 @@ node [shape=box] ;"""
             for pointer in node.pointers:
                 queue.append(pointer[1])
 
-    def generate_json_like_structure(self, node=None):
+    def generate_json_like_structure(self, node=None, condition=None):
         if node is None:
             node = self.root
         if node.pointers != []:
-            children = [self.generate_json_like_structure(node=i[1]) for i in node.pointers]
+            children = [self.generate_json_like_structure(node=i[1], condition=i[0]) for i in node.pointers]
+            if condition:
+                return {"name": str(condition)+' -> '+str(node.name), "children": children}
             return {"name": str(node.name), "children": children}
         else:
             return {"name": str(node.name)}
@@ -167,7 +169,7 @@ node [shape=box] ;"""
         if node.pointers != []:
             if link is not None:
                 child = [self.generate_json_like_structure_label(node=link[1])]
-                return {"name": str(link[0]), "children": child}
+                return {"name": 'If '+str(link[0])+' ->', "children": child}
             children = [self.generate_json_like_structure_label(link=i) for i in node.pointers]
             return {"name": str(node.name), "children": children}
         else:
